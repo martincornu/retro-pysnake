@@ -1,14 +1,14 @@
-"""Snake, classic arcade game.
+"""
+Creation: 15/01/21
+Author: Martin Cornu
 
-Exercises
+Scape-Game Saint-Etienne
 
-1. How do you make the snake faster or slower?
-2. How can you make the snake go around the edges?
-3. How would you move the food?
-4. Change the snake to respond to arrow keys.
+Snake classic game modified. Toggle GPIO and display code on win.
 
 """
 
+import time
 from turtle import *
 from random import randrange
 from freegames import square, vector
@@ -18,6 +18,23 @@ snake = [vector(10, 0)]
 aim = vector(0, -10)
 my_turtle = Turtle()
 g_start = 0
+
+def init():
+    global g_start
+    global food
+    global aim
+    global snake
+    global my_turtle
+    
+    g_start = 0
+    food = vector(0, 0)
+    snake = [vector(10, 0)]
+    aim = vector(0, -10)
+    head = snake[-1].copy()
+    head.move(aim)
+    my_turtle.color('black')
+    my_turtle.write("Press space to start", font=("Arial", 16, "bold"), align="center")
+    move()
 
 def start():
     global g_start
@@ -36,6 +53,7 @@ def inside(head):
 
 def move():
     global g_start
+    global my_turtle
     
     if g_start == 1:
         "Move snake forward one segment."
@@ -43,9 +61,12 @@ def move():
         head.move(aim)
 
         if not inside(head) or head in snake:
-            square(head.x, head.y, 9, 'red')
-            update()
-            my_turtle.write("GAMEOVER!", font=("Arial", 16, "bold"), align="center")
+            clear()
+            my_turtle.color('red')
+            my_turtle.write("GAMEOVER", font=("Arial", 25, "bold"), align="center")
+            time.sleep(1)
+            my_turtle.clear()
+            init()
             return
 
         snake.append(head)
@@ -56,9 +77,8 @@ def move():
             food.y = randrange(-15, 15) * 10
         else:
             snake.pop(0)
-        #display code and set an output to high if len > ...
+            # display code and set an output to high if len > ...
             if len(snake) > 1:
-                print('Win!')
                 clear()
                 my_turtle.color('green')
                 my_turtle.write("WIN! CODE : 43120", font=("Arial", 25, "bold"), align="center")
@@ -85,6 +105,5 @@ onkey(lambda: change(10, 0), 'Right')
 onkey(lambda: change(-10, 0), 'Left')
 onkey(lambda: change(0, 10), 'Up')
 onkey(lambda: change(0, -10), 'Down')
-my_turtle.write("Press space to start", font=("Arial", 16, "bold"), align="center")
-move()
+init()
 done()
