@@ -13,6 +13,9 @@ from turtle import *
 from random import randrange
 from freegames import square, vector
 
+WIDTH = 1920
+HEIGHT = 1080
+
 food = vector(0, 0)
 snake = [vector(10, 0)]
 aim = vector(0, -10)
@@ -33,7 +36,7 @@ def init():
     head = snake[-1].copy()
     head.move(aim)
     my_turtle.color('black')
-    my_turtle.write("Press space to start", font=("Arial", 16, "bold"), align="center")
+    my_turtle.write("Press button to start", font=("Arial", 35, "bold"), align="center")
     move()
 
 def start():
@@ -49,7 +52,7 @@ def change(x, y):
 
 def inside(head):
     "Return True if head inside boundaries."
-    return -200 < head.x < 190 and -200 < head.y < 190
+    return -(WIDTH/2)+80 < head.x < (WIDTH/2)-50 and -(HEIGHT/2)+80 < head.y < (HEIGHT/2)-50
 
 def move():
     global g_start
@@ -63,7 +66,7 @@ def move():
         if not inside(head) or head in snake:
             clear()
             my_turtle.color('red')
-            my_turtle.write("GAMEOVER", font=("Arial", 25, "bold"), align="center")
+            my_turtle.write("GAMEOVER", font=("Arial", 35, "bold"), align="center")
             time.sleep(1)
             my_turtle.clear()
             init()
@@ -78,10 +81,10 @@ def move():
         else:
             snake.pop(0)
             # display code and set an output to high if len > ...
-            if len(snake) > 1:
+            if len(snake) > 3:
                 clear()
                 my_turtle.color('green')
-                my_turtle.write("WIN! CODE : 43120", font=("Arial", 25, "bold"), align="center")
+                my_turtle.write("WIN! CODE : 43120", font=("Arial", 35, "bold"), align="center")
                 return
 
         clear()
@@ -93,9 +96,10 @@ def move():
         update()
 
     ontimer(move, 100)
-    
 
-setup(420, 420, 370, 0)
+    
+window = Screen()
+window.setup(width=1.0, height=1.0, startx=None, starty=None)
 hideturtle()
 my_turtle.hideturtle()
 tracer(False)
