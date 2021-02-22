@@ -9,9 +9,16 @@ Snake classic game modified. Toggle GPIO and display code on win.
 """
 
 import time
+import RPi.GPIO as GPIO            
 from turtle import *
 from random import randrange
 from freegames import square, vector
+
+OUTPUT_PIN = 21
+LED_PIN = 20
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(LED_PIN, GPIO.OUT)
+GPIO.setup(OUTPUT_PIN, GPIO.OUT)
 
 WIDTH = 1920
 HEIGHT = 1080
@@ -28,13 +35,18 @@ def init():
     global aim
     global snake
     global my_turtle
-    
+
+    # clear gpios
+    GPIO.output(LED_PIN, 0)
+    GPIO.output(OUTPUT_PIN, 0)
+    # init snake
     g_start = 0
     food = vector(0, 0)
     snake = [vector(10, 0)]
     aim = vector(0, -10)
     head = snake[-1].copy()
     head.move(aim)
+    # init screen
     my_turtle.color('black')
     my_turtle.write("Press button to start", font=("Arial", 35, "bold"), align="center")
     move()
@@ -85,6 +97,8 @@ def move():
                 clear()
                 my_turtle.color('green')
                 my_turtle.write("WIN! CODE : 43120", font=("Arial", 35, "bold"), align="center")
+                GPIO.output(LED_PIN, 1)
+                GPIO.output(OUTPUT_PIN, 1)
                 return
 
         clear()
