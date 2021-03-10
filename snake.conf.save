@@ -1,0 +1,9 @@
+[program:snake]
+command=python3 snake.py
+directory=/home/pi/retro-pysnake
+user=root
+autostart=true
+autorestart=true
+#environment=DISPLAY=":0.0"
+#stderr_logfile=/var/log/supervisor/snake.err.log
+redirect_stderr=true
