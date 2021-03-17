@@ -1,7 +1,0 @@
-[program:qjoypad]
-command=qjoypad "arcade"
-autostart=true
-autorestart=true
-#environment=DISPLAY=":0.0"
-#stderr_logfile=/var/log/supervisor/snake.err.log
-redirect_stderr=true

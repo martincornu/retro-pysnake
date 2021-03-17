@@ -1,0 +1,16 @@
+[Unit]
+Description=qjoypad
+After=network.target
+
+[Service]
+ExecStart=qjoypad "arcade"
+WorkingDirectory=/home/pi/retro-pysnake
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+Environment=DISPLAY=":0.0"
+
+[Install]
+WantedBy=multi-user.target
+

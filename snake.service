@@ -1,0 +1,15 @@
+[Unit]
+Description=snake
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 snake.py
+WorkingDirectory=/home/pi/retro-pysnake
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+Environment=DISPLAY=":0.0"
+
+[Install]
+WantedBy=multi-user.target
