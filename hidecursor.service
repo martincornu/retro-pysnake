@@ -1,0 +1,15 @@
+[Unit]
+Description=snake
+After=network.target
+
+[Service]
+ExecStart=/bin/bash hidecursor.sh
+WorkingDirectory=/home/pi/retro-pysnake
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
+

@@ -16,6 +16,7 @@ from freegames import square, vector
 
 OUTPUT_PIN = 21
 LED_PIN = 20
+SIZE = 4
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(LED_PIN, GPIO.OUT)
 GPIO.setup(OUTPUT_PIN, GPIO.OUT)
@@ -93,7 +94,7 @@ def move():
         else:
             snake.pop(0)
             # display code and set an output to high if len > ...
-            if len(snake) > 3:
+            if len(snake) > 10:
                 clear()
                 my_turtle.color('green')
                 my_turtle.write("WIN! CODE : 43120", font=("Arial", 35, "bold"), align="center")
