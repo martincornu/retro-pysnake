@@ -1,6 +1,7 @@
 # retro-pysnake
 Snake classic game modified. Toggle GPIO and display code on win.
 
-2 files:
+files:
 - snake.py = python game modified
-- snake.conf = supervisor config file to run snake.py as a service after boot.
+- qjoypad.service = service to run qjoypad for game controllers
+- snake.service = service to run the game
