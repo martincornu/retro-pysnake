@@ -5,3 +5,4 @@ files:
 - snake.py = python game modified
 - qjoypad.service = service to run qjoypad for game controllers
 - snake.service = service to run the game
+- hidecursor.service / .sh = hide cursor after x s of inactivity 
