@@ -9,26 +9,45 @@ Snake classic game modified. Toggle GPIO and display code on win.
 """
 
 import time
-import RPi.GPIO as GPIO            
+import RPi.GPIO as GPIO
+import turtle
 from turtle import *
 from random import randrange
 from freegames import square, vector
 
 OUTPUT_PIN = 21
+CODE = "43120"
 LED_PIN = 20
-SIZE = 4
+SNAKE_LEN = 30
+
+RECTANGLE_H = 800
+RECTANGLE_W = 1000
+
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(LED_PIN, GPIO.OUT)
 GPIO.setup(OUTPUT_PIN, GPIO.OUT)
-
-WIDTH = 1920
-HEIGHT = 1080
 
 food = vector(0, 0)
 snake = [vector(10, 0)]
 aim = vector(0, -10)
 my_turtle = Turtle()
 g_start = 0
+
+# draw rectangle to delimit the game (borders)
+t = turtle.Turtle()
+t.width(4)
+t.color("white")
+t.setpos(-(RECTANGLE_W/2), -(RECTANGLE_H/2))
+t.color("black")
+t.forward(RECTANGLE_W)
+t.left(90)
+t.forward(RECTANGLE_H)
+t.left(90)
+t.forward(RECTANGLE_W)
+t.left(90)
+t.forward(RECTANGLE_H)
+t.left(90)
+t.hideturtle()
 
 def init():
     global g_start
@@ -50,6 +69,7 @@ def init():
     # init screen
     my_turtle.color('black')
     my_turtle.write("Press button to start", font=("Arial", 35, "bold"), align="center")
+    
     move()
 
 def start():
@@ -65,7 +85,7 @@ def change(x, y):
 
 def inside(head):
     "Return True if head inside boundaries."
-    return -(WIDTH/2)+80 < head.x < (WIDTH/2)-50 and -(HEIGHT/2)+80 < head.y < (HEIGHT/2)-50
+    return -(RECTANGLE_W/2) < head.x < (RECTANGLE_W/2) and -(RECTANGLE_H/2) < head.y < (RECTANGLE_H/2)
 
 def move():
     global g_start
@@ -94,10 +114,10 @@ def move():
         else:
             snake.pop(0)
             # display code and set an output to high if len > ...
-            if len(snake) > 10:
+            if len(snake) > SNAKE_LEN:
                 clear()
                 my_turtle.color('green')
-                my_turtle.write("WIN! CODE : 43120", font=("Arial", 35, "bold"), align="center")
+                my_turtle.write("WIN! CODE : " + CODE, font=("Arial", 35, "bold"), align="center")
                 GPIO.output(LED_PIN, 1)
                 GPIO.output(OUTPUT_PIN, 1)
                 return
@@ -110,7 +130,7 @@ def move():
         square(food.x, food.y, 9, 'green')
         update()
 
-    ontimer(move, 100)
+    ontimer(move, 50)
 
     
 window = Screen()
