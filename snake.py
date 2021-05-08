@@ -18,7 +18,7 @@ from freegames import square, vector
 OUTPUT_PIN = 21
 CODE = "43120"
 LED_PIN = 20
-SNAKE_LEN = 30
+SNAKE_LEN = 10
 
 RECTANGLE_H = 800
 RECTANGLE_W = 1000
@@ -130,7 +130,7 @@ def move():
         square(food.x, food.y, 9, 'green')
         update()
 
-    ontimer(move, 50)
+    ontimer(move, 100)
 
     
 window = Screen()
