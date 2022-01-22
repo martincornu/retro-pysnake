@@ -97,12 +97,14 @@ def move():
         head.move(aim)
 
         if not inside(head) or head in snake:
+            keys_deactivate()
             clear()
             my_turtle.color('red')
             my_turtle.write("GAMEOVER", font=("Arial", 35, "bold"), align="center")
             time.sleep(1)
             my_turtle.clear()
             init()
+            keys_activate()
             return
 
         snake.append(head)
@@ -115,11 +117,13 @@ def move():
             snake.pop(0)
             # display code and set an output to high if len > ...
             if len(snake) > SNAKE_LEN:
+                keys_deactivate()
                 clear()
                 my_turtle.color('green')
                 my_turtle.write("WIN! CODE : " + CODE, font=("Arial", 35, "bold"), align="center")
                 GPIO.output(LED_PIN, 1)
                 GPIO.output(OUTPUT_PIN, 1)
+                keys_activate()
                 return
 
         clear()
@@ -131,18 +135,27 @@ def move():
         update()
 
     ontimer(move, 100)
-
+    
+def keys_activate():
+    onkey(lambda: start(), 'space')
+    onkey(lambda: change(10, 0), 'Right')
+    onkey(lambda: change(-10, 0), 'Left')
+    onkey(lambda: change(0, 10), 'Up')
+    onkey(lambda: change(0, -10), 'Down')
+    listen()
+    
+def keys_deactivate():
+    onkey(None, 'space')
+    onkey(None, 'Right')
+    onkey(None, 'Left')
+    onkey(None, 'Up')
+    onkey(None, 'Down')
     
 window = Screen()
 window.setup(width=1.0, height=1.0, startx=None, starty=None)
 hideturtle()
 my_turtle.hideturtle()
 tracer(False)
-listen()
-onkey(lambda: start(), 'space')
-onkey(lambda: change(10, 0), 'Right')
-onkey(lambda: change(-10, 0), 'Left')
-onkey(lambda: change(0, 10), 'Up')
-onkey(lambda: change(0, -10), 'Down')
+keys_activate()
 init()
 done()
