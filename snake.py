@@ -120,7 +120,7 @@ def move():
                 keys_deactivate()
                 clear()
                 my_turtle.color('green')
-                my_turtle.write("WIN! CODE : " + CODE, font=("Arial", 35, "bold"), align="center")
+                my_turtle.write("LASER ACTIF\n CODE " + CODE, font=("Arial", 35, "bold"), align="center")
                 GPIO.output(LED_PIN, 1)
                 GPIO.output(OUTPUT_PIN, 1)
                 keys_activate()
