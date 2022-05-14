@@ -7,20 +7,26 @@ Scape-Game Saint-Etienne
 Snake classic game modified. Toggle GPIO and display code on win.
 
 """
+DESKTOP_PC = 0  # set to 1 to run script on pc and not use GPIO
 
 import time
-#import RPi.GPIO as GPIO
+
+if DESKTOP_PC == 0:
+    import RPi.GPIO as GPIO
+
 import turtle
 from turtle import *
 from random import randrange
 from freegames import square, vector
 
-DESKTOP_PC = 1
-
+COLOR_THEME = 0     # set to 0 for black/white color theme
+                    # set to 1 for white/green/red color theme
 OUTPUT_PIN = 21
 CODE = "43120"
 LED_PIN = 20
 SNAKE_LEN = 10
+SNAKE_SIZE = 16
+SNAKE_SPEED = 120
 
 RECTANGLE_H = 800
 RECTANGLE_W = 1000
@@ -36,16 +42,22 @@ aim = vector(0, -10)
 my_turtle = Turtle()
 g_start = 0
 wn=turtle.Screen()
-wn.bgcolor("black")
+
+if COLOR_THEME == 0:
+    wn.bgcolor("black")
 
 # draw rectangle to delimit the game (borders)
 t = turtle.Turtle()
 t.width(4)
-#t.color("white")
-t.color("black")
+if COLOR_THEME == 1:
+    t.color("white")
+elif COLOR_THEME == 0:
+    t.color("black")
 t.setpos(-(RECTANGLE_W/2), -(RECTANGLE_H/2))
-#t.color("black")
-t.color("white")
+if COLOR_THEME == 0:
+    t.color("white")
+elif COLOR_THEME == 1:
+    t.color("black")
 t.forward(RECTANGLE_W)
 t.left(90)
 t.forward(RECTANGLE_H)
@@ -67,6 +79,7 @@ def init():
         # clear gpios
         GPIO.output(LED_PIN, 0)
         GPIO.output(OUTPUT_PIN, 0)
+    
     # init snake
     g_start = 0
     food = vector(0, 0)
@@ -74,9 +87,13 @@ def init():
     aim = vector(0, -10)
     head = snake[-1].copy()
     head.move(aim)
+    
     # init screen
-    #my_turtle.color('black')
-    my_turtle.color('white')
+    if COLOR_THEME == 1:
+        my_turtle.color('black')
+    elif COLOR_THEME == 0:
+        my_turtle.color('white')
+    
     my_turtle.write("Press button to start", font=("Arial", 35, "bold"), align="center")
     
     move()
@@ -108,8 +125,10 @@ def move():
         if not inside(head) or head in snake:
             keys_deactivate()
             clear()
-            #my_turtle.color('red')
-            my_turtle.color('white')
+            if COLOR_THEME == 1:
+                my_turtle.color('red')
+            elif COLOR_THEME == 0:
+                my_turtle.color('white')
             my_turtle.write("GAMEOVER", font=("Arial", 35, "bold"), align="center")
             time.sleep(1)
             my_turtle.clear()
@@ -129,8 +148,10 @@ def move():
             if len(snake) > SNAKE_LEN:
                 keys_deactivate()
                 clear()
-                #my_turtle.color('green')
-                my_turtle.color('white')
+                if COLOR_THEME == 1:
+                    my_turtle.color('green')
+                elif COLOR_THEME == 0:
+                    my_turtle.color('white')
                 my_turtle.write("LASER ACTIF\n CODE " + CODE, font=("Arial", 35, "bold"), align="center")
                 if DESKTOP_PC == 0:
                     GPIO.output(LED_PIN, 1)
@@ -141,14 +162,18 @@ def move():
         clear()
 
         for body in snake:
-            #square(body.x, body.y, 9, 'black')
-            square(body.x, body.y, 9, 'white')
-
-        #square(food.x, food.y, 9, 'green')
-        square(food.x, food.y, 9, 'white')
+            if COLOR_THEME == 1:
+                square(body.x, body.y, SNAKE_SIZE, 'black')
+            elif COLOR_THEME == 0:
+                square(body.x, body.y, SNAKE_SIZE, 'white')
+ 
+        if COLOR_THEME == 1:
+            square(food.x, food.y, SNAKE_SIZE, 'green')
+        elif COLOR_THEME == 0:
+            square(food.x, food.y, SNAKE_SIZE, 'white')
         update()
 
-    ontimer(move, 100)
+    ontimer(move, SNAKE_SPEED)
     
 def keys_activate():
     onkey(lambda: start(), 'space')
