@@ -25,11 +25,11 @@ OUTPUT_PIN = 21
 CODE = "43120"
 LED_PIN = 20
 SNAKE_LEN = 10
-SNAKE_SIZE = 16
-SNAKE_SPEED = 120
+SNAKE_SIZE = 15
+SNAKE_SPEED = 100
 
-RECTANGLE_H = 800
-RECTANGLE_W = 1000
+RECTANGLE_H = 480   # 384, 480, 600 , 800
+RECTANGLE_W = 600   # 480, 600, 750, 1000
 
 if DESKTOP_PC == 0:
     GPIO.setmode(GPIO.BCM)
@@ -152,7 +152,7 @@ def move():
                     my_turtle.color('green')
                 elif COLOR_THEME == 0:
                     my_turtle.color('white')
-                my_turtle.write("LASER ACTIF\n CODE " + CODE, font=("Arial", 35, "bold"), align="center")
+                my_turtle.write("LASER ACTIF\n\n CODE " + CODE, font=("Arial", 35, "bold"), align="center")
                 if DESKTOP_PC == 0:
                     GPIO.output(LED_PIN, 1)
                     GPIO.output(OUTPUT_PIN, 1)
