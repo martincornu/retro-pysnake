@@ -27,9 +27,11 @@ LED_PIN = 20
 SNAKE_LEN = 10
 SNAKE_SIZE = 15
 SNAKE_SPEED = 100
+CHANGE_DIR_TIME_MIN = 150  # minimum time (ms) between change direction
 
 RECTANGLE_H = 480   # 384, 480, 600 , 800
 RECTANGLE_W = 600   # 480, 600, 750, 1000
+INSIDE_PADDING = SNAKE_SIZE  # apply inside padding to make sure snake does not go out limits.
 
 if DESKTOP_PC == 0:
     GPIO.setmode(GPIO.BCM)
@@ -41,7 +43,8 @@ snake = [vector(10, 0)]
 aim = vector(0, -10)
 my_turtle = Turtle()
 g_start = 0
-g_direction = "down" # current snake direction
+g_direction = "down"      # current snake direction
+g_change_dir_last_ts = 0  # last change direction timestamp in ms
 wn=turtle.Screen()
 
 if COLOR_THEME == 0:
@@ -107,32 +110,44 @@ def start():
 
 def change(x, y):
     global g_direction
+    global g_change_dir_last_ts
     
-    # first find aim direction
-    if x == 10 and y == 0:
-        l_aimDirection = "right"
-    elif x == -10 and y == 0:
-        l_aimDirection = "left"
-    elif x == 0 and y == 10:
-        l_aimDirection = "up"
-    elif x == 0 and y == -10:
-        l_aimDirection = "down"
+    # get current time in ms
+    end = time.time_ns() / 1000000
+    # change direction only if last change was older than CHANGE_DIR_TIME_MIN.
+    # this is to avoid unwanted changes which leads to gameovers.
+    if (end - g_change_dir_last_ts) > CHANGE_DIR_TIME_MIN:
+        print("change")
+        g_change_dir_last_ts = end
         
-    # check if aim direction is the opposite way to avoid
-    # miswanted game over.
-    if ((g_direction == "right" and l_aimDirection != "left")
-         or (g_direction == "left" and l_aimDirection != "right")
-         or (g_direction == "up" and l_aimDirection != "down")
-         or (g_direction == "down" and l_aimDirection != "up")):
-        
-        # if not opposite, then change snake direction
-        aim.x = x
-        aim.y = y
-        g_direction = l_aimDirection
+        # first find aim direction
+        if x == 10 and y == 0:
+            l_aimDirection = "right"
+        elif x == -10 and y == 0:
+            l_aimDirection = "left"
+        elif x == 0 and y == 10:
+            l_aimDirection = "up"
+        elif x == 0 and y == -10:
+            l_aimDirection = "down"
+            
+        # check if aim direction is the opposite way to avoid
+        # miswanted game over.
+        if ((g_direction == "right" and l_aimDirection != "left")
+             or (g_direction == "left" and l_aimDirection != "right")
+             or (g_direction == "up" and l_aimDirection != "down")
+             or (g_direction == "down" and l_aimDirection != "up")):
+            
+            # if not opposite, then change snake direction
+            aim.x = x
+            aim.y = y
+            g_direction = l_aimDirection
+    else:
+        print("change too fast")
+
 
 def inside(head):
     "Return True if head inside boundaries."
-    return -(RECTANGLE_W/2) < head.x < (RECTANGLE_W/2) and -(RECTANGLE_H/2) < head.y < (RECTANGLE_H/2)
+    return -((RECTANGLE_W/2)-INSIDE_PADDING) < head.x < ((RECTANGLE_W/2)-INSIDE_PADDING) and -((RECTANGLE_H/2)-INSIDE_PADDING) < head.y < ((RECTANGLE_H/2)-INSIDE_PADDING)
 
 def move():
     global g_start
