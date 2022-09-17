@@ -41,6 +41,7 @@ snake = [vector(10, 0)]
 aim = vector(0, -10)
 my_turtle = Turtle()
 g_start = 0
+g_direction = "down" # current snake direction
 wn=turtle.Screen()
 
 if COLOR_THEME == 0:
@@ -105,9 +106,29 @@ def start():
         my_turtle.undo()
 
 def change(x, y):
-    "Change snake direction."
-    aim.x = x
-    aim.y = y
+    global g_direction
+    
+    # first find aim direction
+    if x == 10 and y == 0:
+        l_aimDirection = "right"
+    elif x == -10 and y == 0:
+        l_aimDirection = "left"
+    elif x == 0 and y == 10:
+        l_aimDirection = "up"
+    elif x == 0 and y == -10:
+        l_aimDirection = "down"
+        
+    # check if aim direction is the opposite way to avoid
+    # miswanted game over.
+    if ((g_direction == "right" and l_aimDirection != "left")
+         or (g_direction == "left" and l_aimDirection != "right")
+         or (g_direction == "up" and l_aimDirection != "down")
+         or (g_direction == "down" and l_aimDirection != "up")):
+        
+        # if not opposite, then change snake direction
+        aim.x = x
+        aim.y = y
+        g_direction = l_aimDirection
 
 def inside(head):
     "Return True if head inside boundaries."
@@ -120,6 +141,7 @@ def move():
     if g_start == 1:
         "Move snake forward one segment."
         head = snake[-1].copy()
+        
         head.move(aim)
 
         if not inside(head) or head in snake:
